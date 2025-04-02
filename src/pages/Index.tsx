@@ -48,18 +48,18 @@ const Index = () => {
         const scrollProgress = (scrollPosition - sectionTop + windowHeight) / windowHeight;
         
         if (index < newActiveSection) {
-          // Sections above the active one - scale and fade out
-          section.style.transform = `translateY(${Math.min(0, -100 + scrollProgress * 100)}px) scale(${0.9 + 0.1 * scrollProgress})`;
-          section.style.opacity = `${Math.max(0, scrollProgress)}`;
+          // Sections above the active one - slide up and reduce opacity
+          section.style.transform = `translateY(${Math.min(0, -100 * (newActiveSection - index))}px)`;
+          section.style.opacity = `${0.7}`;
           section.style.zIndex = `${10 - index}`;
         } else if (index === newActiveSection) {
-          // Active section
-          section.style.transform = 'translateY(0) scale(1)';
+          // Active section - full visibility
+          section.style.transform = 'translateY(0)';
           section.style.opacity = '1';
           section.style.zIndex = '5';
         } else {
-          // Sections below the active one - waiting to come in
-          section.style.transform = `translateY(${100 * (1 - Math.min(1, Math.max(0, (scrollPosition + windowHeight - sectionTop) / windowHeight)))}px)`;
+          // Sections below the active one - normal position
+          section.style.transform = `translateY(0)`;
           section.style.opacity = '1';
           section.style.zIndex = `${1 + index}`;
         }
@@ -85,7 +85,7 @@ const Index = () => {
     // Add floating dots background
     const container = document.querySelector('.index-container');
     if (container) {
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < 20; i++) {
         const dot = document.createElement('div');
         dot.classList.add('moving-dots');
         dot.style.left = `${Math.random() * 100}%`;
