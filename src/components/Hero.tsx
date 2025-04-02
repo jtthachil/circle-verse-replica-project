@@ -11,8 +11,8 @@ const Hero = () => {
     const decorativeElements = heroRef.current?.querySelectorAll('.decorative-element');
     decorativeElements?.forEach((element) => {
       // Random movement properties for each element
-      const speedX = Math.random() * 0.5 + 0.5;
-      const speedY = Math.random() * 0.5 + 0.5;
+      let speedX = Math.random() * 0.5 + 0.5;
+      let speedY = Math.random() * 0.5 + 0.5;
       const directionX = Math.random() > 0.5 ? 1 : -1;
       const directionY = Math.random() > 0.5 ? 1 : -1;
       
@@ -58,22 +58,22 @@ const Hero = () => {
   }, []);
 
   return (
-    <section ref={heroRef} className="pt-28 pb-20 relative overflow-hidden gradient-bg">
+    <section ref={heroRef} className="pt-28 pb-20 relative overflow-hidden bg-[#5C6AA1]/5">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <div className="space-y-8 hero-content opacity-0 transform translate-y-4 transition-all duration-700">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
-              <span className="text-circle-purple">Simplifying</span> Digital Experiences For Your Business
+              <span className="text-[#5C6AA1]">Simplifying</span> Digital Experiences For Your Business
             </h1>
             <p className="text-lg text-gray-600 max-w-lg">
               We help businesses grow, launch products, and build award-winning digital experiences.
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button className="bg-circle-purple hover:bg-circle-purple/90 text-white px-8 py-6 rounded-full circle-btn">
+              <Button className="bg-[#5C6AA1] hover:bg-[#5C6AA1]/90 text-white px-8 py-6 rounded-full circle-btn">
                 <span>Get Started</span>
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button variant="outline" className="border-2 border-circle-purple text-circle-purple hover:bg-circle-purple/10 px-8 py-6 rounded-full">
+              <Button variant="outline" className="border-2 border-[#5C6AA1] text-[#5C6AA1] hover:bg-[#5C6AA1]/10 px-8 py-6 rounded-full">
                 Learn More
               </Button>
             </div>
@@ -95,16 +95,16 @@ const Hero = () => {
           <div className="relative hero-image opacity-0 transform scale-95 transition-all duration-700">
             <div className="relative z-10">
               <div className="bg-white rounded-lg shadow-xl p-6 max-w-lg mx-auto">
-                <div className="w-full h-60 bg-circle-light rounded-lg mb-6"></div>
+                <div className="w-full h-60 bg-[#F3F5FF] rounded-lg mb-6"></div>
                 <h3 className="text-xl font-semibold mb-2">Digital Product Design</h3>
                 <p className="text-gray-600 mb-4">
                   Creating intuitive digital products that users love.
                 </p>
                 <div className="flex justify-between items-center">
                   <div className="flex -space-x-2">
-                    <div className="w-8 h-8 rounded-full bg-circle-blue"></div>
-                    <div className="w-8 h-8 rounded-full bg-circle-pink"></div>
-                    <div className="w-8 h-8 rounded-full bg-circle-orange"></div>
+                    <div className="w-8 h-8 rounded-full bg-[#5C6AA1]"></div>
+                    <div className="w-8 h-8 rounded-full bg-[#E4486C]"></div>
+                    <div className="w-8 h-8 rounded-full bg-[#FDB338]"></div>
                   </div>
                   <span className="text-sm text-gray-500">+28 Reviews</span>
                 </div>
@@ -112,17 +112,17 @@ const Hero = () => {
             </div>
             
             {/* Decorative Elements with enhanced animation */}
-            <div className="decorative-element absolute -top-10 -right-10 w-40 h-40 bg-circle-yellow/20 rounded-full blur-xl transition-transform duration-3000 ease-in-out"></div>
-            <div className="decorative-element absolute -bottom-10 -left-10 w-40 h-40 bg-circle-blue/20 rounded-full blur-xl transition-transform duration-3000 ease-in-out"></div>
-            <div className="decorative-element absolute top-1/2 -right-5 w-10 h-10 bg-circle-pink rounded-full animate-pulse-light transition-transform duration-3000 ease-in-out"></div>
-            <div className="decorative-element absolute bottom-1/4 left-0 w-12 h-12 bg-circle-purple/30 rounded-full transition-transform duration-3000 ease-in-out"></div>
+            <div className="decorative-element absolute -top-10 -right-10 w-40 h-40 bg-[#FDB338]/20 rounded-full blur-xl transition-transform duration-3000 ease-in-out"></div>
+            <div className="decorative-element absolute -bottom-10 -left-10 w-40 h-40 bg-[#5C6AA1]/20 rounded-full blur-xl transition-transform duration-3000 ease-in-out"></div>
+            <div className="decorative-element absolute top-1/2 -right-5 w-10 h-10 bg-[#E4486C] rounded-full animate-pulse-light transition-transform duration-3000 ease-in-out"></div>
+            <div className="decorative-element absolute bottom-1/4 left-0 w-12 h-12 bg-[#5C6AA1]/30 rounded-full transition-transform duration-3000 ease-in-out"></div>
           </div>
         </div>
       </div>
       
       {/* Background Shapes with random movement */}
-      <div className="decorative-element hidden sm:block absolute top-1/4 left-0 w-24 h-24 bg-circle-blue/10 rounded-full transition-transform duration-3000 ease-in-out"></div>
-      <div className="decorative-element hidden sm:block absolute bottom-1/3 right-10 w-20 h-20 bg-circle-pink/10 rounded-full transition-transform duration-3000 ease-in-out"></div>
+      <div className="decorative-element hidden sm:block absolute top-1/4 left-0 w-24 h-24 bg-[#5C6AA1]/10 rounded-full transition-transform duration-3000 ease-in-out"></div>
+      <div className="decorative-element hidden sm:block absolute bottom-1/3 right-10 w-20 h-20 bg-[#E4486C]/10 rounded-full transition-transform duration-3000 ease-in-out"></div>
     </section>
   );
 };
