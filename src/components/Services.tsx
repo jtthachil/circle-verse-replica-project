@@ -1,17 +1,65 @@
 
 import { ArrowRight, Lightbulb, Code, Smartphone, PenTool, BarChart, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRef, useEffect } from "react";
 
 interface ServiceCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
   color: string;
+  index: number;
 }
 
-const ServiceCard = ({ icon, title, description, color }: ServiceCardProps) => {
+const ServiceCard = ({ icon, title, description, color, index }: ServiceCardProps) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    // Add staggered entrance animation
+    const card = cardRef.current;
+    if (card) {
+      // Add delay based on index for staggered animation
+      setTimeout(() => {
+        card.classList.add('animate-fade-in');
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, 100 * index);
+      
+      // Add mouse-follow effect
+      const handleMouseMove = (e: MouseEvent) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left; 
+        const y = e.clientY - rect.top;
+        
+        // Calculate rotation based on mouse position
+        const rotateX = (y - rect.height / 2) / 20;
+        const rotateY = -(x - rect.width / 2) / 20;
+        
+        // Apply subtle 3D rotation
+        card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      };
+      
+      const handleMouseLeave = () => {
+        // Reset transform on mouse leave
+        card.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+      };
+      
+      card.addEventListener('mousemove', handleMouseMove);
+      card.addEventListener('mouseleave', handleMouseLeave);
+      
+      return () => {
+        card.removeEventListener('mousemove', handleMouseMove);
+        card.removeEventListener('mouseleave', handleMouseLeave);
+      };
+    }
+  }, [index]);
+
   return (
-    <div className="service-card bg-white p-8 rounded-xl shadow-sm hover:shadow-md">
+    <div 
+      ref={cardRef} 
+      className="service-card bg-white p-8 rounded-xl shadow-sm hover:shadow-md opacity-0 transform translate-y-8 transition-all duration-500"
+      style={{ transitionDelay: `${index * 100}ms` }}
+    >
       <div className={`w-14 h-14 ${color} rounded-xl flex items-center justify-center mb-6`}>
         {icon}
       </div>
@@ -26,6 +74,28 @@ const ServiceCard = ({ icon, title, description, color }: ServiceCardProps) => {
 };
 
 const Services = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  
+  useEffect(() => {
+    const sectionElement = sectionRef.current;
+    const handleScroll = () => {
+      if (sectionElement) {
+        const rect = sectionElement.getBoundingClientRect();
+        const isVisible = rect.top < window.innerHeight - 100;
+        
+        if (isVisible) {
+          sectionElement.classList.add('is-visible');
+          document.removeEventListener('scroll', handleScroll);
+        }
+      }
+    };
+    
+    document.addEventListener('scroll', handleScroll);
+    handleScroll(); // Check on initial load
+    
+    return () => document.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const services = [
     {
       icon: <PenTool className="text-white h-6 w-6" />,
@@ -66,9 +136,18 @@ const Services = () => {
   ];
 
   return (
-    <section className="py-20 bg-circle-light">
+    <section ref={sectionRef} className="py-20 bg-circle-light animate-on-scroll">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-16 opacity-0 transform translate-y-8 transition-all duration-500" 
+             style={{ opacity: 0, transform: 'translateY(20px)' }}
+             ref={el => {
+               if (el) {
+                 setTimeout(() => {
+                   el.style.opacity = '1';
+                   el.style.transform = 'translateY(0)';
+                 }, 100);
+               }
+             }}>
           <h2 className="text-3xl sm:text-4xl font-bold mb-4">What We Actually Do</h2>
           <p className="text-gray-600">
             We help ambitious businesses like yours generate more profits by building awareness, driving web traffic, connecting with customers, and growing overall sales.
@@ -83,6 +162,7 @@ const Services = () => {
               title={service.title}
               description={service.description}
               color={service.color}
+              index={index}
             />
           ))}
         </div>

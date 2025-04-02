@@ -1,13 +1,67 @@
 
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 const Hero = () => {
+  const heroRef = useRef<HTMLDivElement>(null);
+  
+  useEffect(() => {
+    // Animation for decorative elements
+    const decorativeElements = heroRef.current?.querySelectorAll('.decorative-element');
+    decorativeElements?.forEach((element) => {
+      // Random movement properties for each element
+      const speedX = Math.random() * 0.5 + 0.5;
+      const speedY = Math.random() * 0.5 + 0.5;
+      const directionX = Math.random() > 0.5 ? 1 : -1;
+      const directionY = Math.random() > 0.5 ? 1 : -1;
+      
+      let posX = 0;
+      let posY = 0;
+      
+      // Float animation frame
+      const animate = () => {
+        posX += speedX * directionX * 0.05;
+        posY += speedY * directionY * 0.05;
+        
+        // Reverse direction at boundaries
+        if (Math.abs(posX) > 10) {
+          posX = 10 * Math.sign(posX);
+          speedX = Math.random() * 0.5 + 0.5;
+        }
+        
+        if (Math.abs(posY) > 10) {
+          posY = 10 * Math.sign(posY);
+          speedY = Math.random() * 0.5 + 0.5;
+        }
+        
+        (element as HTMLElement).style.transform = `translate(${posX}px, ${posY}px)`;
+        requestAnimationFrame(animate);
+      };
+      
+      requestAnimationFrame(animate);
+    });
+    
+    // Entrance animation
+    const heroContent = heroRef.current?.querySelector('.hero-content');
+    const heroImage = heroRef.current?.querySelector('.hero-image');
+    
+    if (heroContent) {
+      heroContent.classList.add('animate-fade-in');
+    }
+    
+    if (heroImage) {
+      setTimeout(() => {
+        heroImage.classList.add('animate-scale-in');
+      }, 300);
+    }
+  }, []);
+
   return (
-    <section className="pt-28 pb-20 relative overflow-hidden gradient-bg">
+    <section ref={heroRef} className="pt-28 pb-20 relative overflow-hidden gradient-bg">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-8">
+          <div className="space-y-8 hero-content opacity-0 transform translate-y-4 transition-all duration-700">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
               <span className="text-circle-purple">Simplifying</span> Digital Experiences For Your Business
             </h1>
@@ -38,8 +92,8 @@ const Hero = () => {
               </div>
             </div>
           </div>
-          <div className="relative">
-            <div className="relative z-10 animate-float">
+          <div className="relative hero-image opacity-0 transform scale-95 transition-all duration-700">
+            <div className="relative z-10">
               <div className="bg-white rounded-lg shadow-xl p-6 max-w-lg mx-auto">
                 <div className="w-full h-60 bg-circle-light rounded-lg mb-6"></div>
                 <h3 className="text-xl font-semibold mb-2">Digital Product Design</h3>
@@ -57,18 +111,18 @@ const Hero = () => {
               </div>
             </div>
             
-            {/* Decorative Elements */}
-            <div className="absolute -top-10 -right-10 w-40 h-40 bg-circle-yellow/20 rounded-full blur-xl"></div>
-            <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-circle-blue/20 rounded-full blur-xl"></div>
-            <div className="absolute top-1/2 -right-5 w-10 h-10 bg-circle-pink rounded-full animate-pulse-light"></div>
-            <div className="absolute bottom-1/4 left-0 w-12 h-12 bg-circle-purple/30 rounded-full"></div>
+            {/* Decorative Elements with enhanced animation */}
+            <div className="decorative-element absolute -top-10 -right-10 w-40 h-40 bg-circle-yellow/20 rounded-full blur-xl transition-transform duration-3000 ease-in-out"></div>
+            <div className="decorative-element absolute -bottom-10 -left-10 w-40 h-40 bg-circle-blue/20 rounded-full blur-xl transition-transform duration-3000 ease-in-out"></div>
+            <div className="decorative-element absolute top-1/2 -right-5 w-10 h-10 bg-circle-pink rounded-full animate-pulse-light transition-transform duration-3000 ease-in-out"></div>
+            <div className="decorative-element absolute bottom-1/4 left-0 w-12 h-12 bg-circle-purple/30 rounded-full transition-transform duration-3000 ease-in-out"></div>
           </div>
         </div>
       </div>
       
-      {/* Background Shapes */}
-      <div className="hidden sm:block absolute top-1/4 left-0 w-24 h-24 bg-circle-blue/10 rounded-full"></div>
-      <div className="hidden sm:block absolute bottom-1/3 right-10 w-20 h-20 bg-circle-pink/10 rounded-full"></div>
+      {/* Background Shapes with random movement */}
+      <div className="decorative-element hidden sm:block absolute top-1/4 left-0 w-24 h-24 bg-circle-blue/10 rounded-full transition-transform duration-3000 ease-in-out"></div>
+      <div className="decorative-element hidden sm:block absolute bottom-1/3 right-10 w-20 h-20 bg-circle-pink/10 rounded-full transition-transform duration-3000 ease-in-out"></div>
     </section>
   );
 };

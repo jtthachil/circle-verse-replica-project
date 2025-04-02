@@ -104,12 +104,16 @@
   background: linear-gradient(90deg, #F7F7FD 0%, rgba(247, 247, 253, 0) 100%);
 }
 
+/* Enhanced animation styles */
 .service-card {
-  transition: all 0.3s ease;
+  transition: all 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
 }
 
 .service-card:hover {
   transform: translateY(-10px);
+  box-shadow: 0 10px 30px rgba(93, 80, 198, 0.1);
 }
 
 .circle-btn {
@@ -132,3 +136,64 @@
 .circle-btn:hover:after {
   left: 100%;
 }
+
+/* Added animation classes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.7s ease-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.7s ease-out forwards;
+}
+
+.section-animate {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.8s ease-out;
+}
+
+.section-animate.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.is-visible .animate-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered animation for child elements */
+.animate-stagger > * {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.5s ease;
+}
+
+.is-visible .animate-stagger > *:nth-child(1) { transition-delay: 0.1s; }
+.is-visible .animate-stagger > *:nth-child(2) { transition-delay: 0.2s; }
+.is-visible .animate-stagger > *:nth-child(3) { transition-delay: 0.3s; }
+.is-visible .animate-stagger > *:nth-child(4) { transition-delay: 0.4s; }
+.is-visible .animate-stagger > *:nth-child(5) { transition-delay: 0.5s; }
+.is-visible .animate-stagger > *:nth-child(6) { transition-delay: 0.6s; }
