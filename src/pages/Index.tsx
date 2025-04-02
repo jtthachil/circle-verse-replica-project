@@ -6,23 +6,62 @@ import Work from "@/components/Work";
 import Testimonials from "@/components/Testimonials";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
 const Index = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [activeSection, setActiveSection] = useState(0);
+  const sectionsRef = useRef<HTMLDivElement[]>([]);
+  
+  const sectionColors = [
+    "bg-gradient-to-br from-teal-500 to-rose-200", // Hero gradient
+    "bg-rose-50", // Services gradient
+    "bg-gradient-to-br from-teal-500 to-rose-200", // Work gradient
+    "bg-rose-50", // Testimonials gradient
+    "bg-gradient-to-br from-teal-500 to-rose-200", // Contact gradient
+  ];
 
   // Initialize animations on page load
   useEffect(() => {
-    // Scroll animation initialization
-    const animateOnScroll = () => {
-      const elements = document.querySelectorAll('.section-animate');
+    // Register sections
+    sectionsRef.current = Array.from(document.querySelectorAll('.page-section'));
+    
+    // Handle scroll effect
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const windowHeight = window.innerHeight;
       
-      elements.forEach(element => {
-        const elementPosition = element.getBoundingClientRect().top;
-        const windowHeight = window.innerHeight;
+      // Find which section should be active based on scroll position
+      let newActiveSection = 0;
+      sectionsRef.current.forEach((section, index) => {
+        const sectionTop = section.offsetTop;
+        if (scrollPosition >= sectionTop - windowHeight / 2) {
+          newActiveSection = index;
+        }
+      });
+      
+      setActiveSection(newActiveSection);
+      
+      // Apply stacking effect to sections
+      sectionsRef.current.forEach((section, index) => {
+        const sectionTop = section.offsetTop;
+        const scrollProgress = (scrollPosition - sectionTop + windowHeight) / windowHeight;
         
-        if (elementPosition < windowHeight - 100) {
-          element.classList.add('is-visible');
+        if (index < newActiveSection) {
+          // Sections above the active one - scale and fade out
+          section.style.transform = `translateY(${Math.min(0, -100 + scrollProgress * 100)}px) scale(${0.9 + 0.1 * scrollProgress})`;
+          section.style.opacity = `${Math.max(0, scrollProgress)}`;
+          section.style.zIndex = `${10 - index}`;
+        } else if (index === newActiveSection) {
+          // Active section
+          section.style.transform = 'translateY(0) scale(1)';
+          section.style.opacity = '1';
+          section.style.zIndex = '5';
+        } else {
+          // Sections below the active one - waiting to come in
+          section.style.transform = `translateY(${100 * (1 - Math.min(1, Math.max(0, (scrollPosition + windowHeight - sectionTop) / windowHeight)))}px)`;
+          section.style.opacity = '1';
+          section.style.zIndex = `${1 + index}`;
         }
       });
     };
@@ -58,35 +97,55 @@ const Index = () => {
     }
     
     // Run once on initial load
-    animateOnScroll();
+    handleScroll();
     
     // Add event listeners
-    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('scroll', handleScroll);
     window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('resize', handleScroll);
     
     // Cleanup
     return () => {
-      window.removeEventListener('scroll', animateOnScroll);
+      window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('resize', handleScroll);
     };
   }, []);
 
   return (
     <div className="min-h-screen index-container overflow-hidden">
       <Navbar />
-      <Hero />
-      <div className="section-animate">
-        <Services />
+      
+      <div className={`page-section min-h-screen flex items-center relative overflow-hidden transition-all duration-700 ease-out ${sectionColors[0]}`}>
+        <div className="w-full">
+          <Hero />
+        </div>
       </div>
-      <div className="section-animate">
-        <Work />
+      
+      <div className={`page-section min-h-screen flex items-center relative overflow-hidden transition-all duration-700 ease-out ${sectionColors[1]}`}>
+        <div className="stacked-page-content w-full">
+          <Services />
+        </div>
       </div>
-      <div className="section-animate">
-        <Testimonials />
+      
+      <div className={`page-section min-h-screen flex items-center relative overflow-hidden transition-all duration-700 ease-out ${sectionColors[2]}`}>
+        <div className="stacked-page-content w-full">
+          <Work />
+        </div>
       </div>
-      <div className="section-animate">
-        <Contact />
+      
+      <div className={`page-section min-h-screen flex items-center relative overflow-hidden transition-all duration-700 ease-out ${sectionColors[3]}`}>
+        <div className="stacked-page-content w-full">
+          <Testimonials />
+        </div>
       </div>
+      
+      <div className={`page-section min-h-screen flex items-center relative overflow-hidden transition-all duration-700 ease-out ${sectionColors[4]}`}>
+        <div className="stacked-page-content w-full">
+          <Contact />
+        </div>
+      </div>
+      
       <Footer />
     </div>
   );
